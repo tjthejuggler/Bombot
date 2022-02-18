@@ -5,21 +5,57 @@
 #do the mouse clicks at their times
 #then go back to 2
 
-import math
-import random
-import pyxhook
 
-def getWeighterRandom(min, max):
-	ourRand = random.random()
-	number = math.floor(abs(random.random() - random.random()) * (1 + max - min) + min)
-	print(number)
+#between wakeups, do in/out of game clicks to prevent timeout
+
+import keyboard
 
 import pyautogui
-position = pyautogui.locateCenterOnScreen('image.png')
-print(position.x/2,position.y/2)
-pyautogui.click(position.x/2,position.y/2)
+import time
+import math
+import random
 
-getWeighterRandom(0, 3000)
+
+def getWeightedRandom(min, max): #(less likely to be near min i think)
+	ourRand = random.random()
+	number = math.floor(abs(random.random() - random.random()) * (1 + max - min) + min)
+	if random.random() > .5:
+		number = -abs(number)
+	print("getWeightedRandom", number)
+	return number
+
+base_session_minutes = 7228
+
+getWeightedRandom(0, 3000)
+
+
+click_pos = []
+keyboard.wait('p')
+click_pos.append(pyautogui.position())
+print(pyautogui.position())
+keyboard.wait('p')
+click_pos.append(pyautogui.position())
+print(pyautogui.position())
+keyboard.wait('p')
+click_pos.append(pyautogui.position())
+keyboard.wait('p')
+click_pos.append(pyautogui.position())
+keyboard.wait('p')
+click_pos.append(pyautogui.position())
+pyautogui.click(20, 100)
+
+# pyautogui.moveRel(0, 10) 
+
+while True:
+	this_session_minutes = base_session_minutes + getWeightedRandom(0,978) + random.random()
+	print('this_session_minutes', this_session_minutes)
+	time.sleep(abs(this_session_minutes))
+	for i in click_pos:
+		between_click_time = getWeightedRandom(0,4)+random.random()
+		time.sleep(abs(between_click_time))
+		print(i, between_click_time)
+		pyautogui.click(i)
+		
 
 #todo
 #take screenshot(or use one took) and make image.png with small item
