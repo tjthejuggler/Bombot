@@ -1,8 +1,5 @@
-#when i go to wake up, i could also put a few to sleep so that i am more likely to always have some awake
-#slightly randomize positions every click
-
-#try running this with half the heros sleeping all the time. Do this once we have a bunch of full health
-
+#currently buggy, clean prints and make them very specific and debug
+#we need a way to cancel, maybe unhoiok the listener when we are in the sequence loop
 
 import keyboard
 import pyautogui
@@ -12,12 +9,7 @@ import random
 import sys
 import re
 from shapely.geometry import Point
-
 from pynput.keyboard import Key, Listener
-  
-
-  
-
 
 def getWeightedRandom(min, max): #(less likely to be near min i think)
 	ourRand = random.random()
@@ -39,13 +31,10 @@ def read_from_file():
 	click_pos_before_loaded = []
 	with open('click_pos_before.txt', 'r') as filehandle:
 		for line in filehandle:
-			# remove linebreak which is the last character of the string
 			currentPlace = line[:-1]
 			print('currentPlace', currentPlace)
-			#coords = [int(s) for s in currentPlace.split() if s.isdigit()]
 			coords = re.findall(r'\d+', currentPlace)
 			print('coords', coords)
-			# add item to the list
 			if len(coords) > 1:					
 				class myPoint(object):
 				    pass
@@ -65,50 +54,49 @@ click_pos_before = []
 click_pos_mid = [[]]*3
 click_pos_after = []
 def sequence_loop():
-#while not inProgrammingMode:
-	this_session_minutes = base_session_minutes + getWeightedRandom(0,1)
-	print('this_session_minutes', this_session_minutes, click_pos_before)
-
-	for i in range(int(this_session_minutes),0,-1):
-		sys.stdout.write(str(i)+' ')
-		sys.stdout.flush()
-		time.sleep(1)
-	#time.sleep(this_session_minutes)
-	for pos in click_pos_before:
-		print(pos)
-		between_click_time = getWeightedRandom(0,4)
-		time.sleep(abs(between_click_time))
-		print(pos.x, between_click_time)
-		pyautogui.click(pos.x+getWeightedRandom(0,6), pos.y+getWeightedRandom(0,6))
-	for idx, pos in enumerate(click_pos_mid[current_sequence_number]): #this should be able to iterate through list items and have their index
-		between_click_time = getWeightedRandom(0,4)
-		time.sleep(abs(between_click_time))
-		#ONLY DO MOVE AND DRAG IF WE ARE ON 1 OR 2 AND ON 2 DO IT TWICE
-		if idx == 0:
-			pyautogui.moveTo(pos.x+getWeightedRandom(0,4), pos.y+getWeightedRandom(0,4))
-		elif idx == 1:
-			pyautogui.dragTo(pos.x+getWeightedRandom(0,4), pos.y+getWeightedRandom(0,4), button='left')
-		else:
-			#do drag stuff(no need to do it if we are on the 0th sequence)
-			print(click_pos)
+	global current_sequence_number
+	while True:
+		this_session_minutes = base_session_minutes + getWeightedRandom(0,1)
+		print('this_session_minutes', this_session_minutes, click_pos_before)
+		for i in range(int(this_session_minutes),0,-1):
+			sys.stdout.write(str(i)+' ')
+			sys.stdout.flush()
+			time.sleep(1)
+		for pos in click_pos_before:
+			print(pos)
+			between_click_time = getWeightedRandom(0,4)
+			time.sleep(abs(between_click_time))
 			print(pos.x, between_click_time)
 			pyautogui.click(pos.x+getWeightedRandom(0,6), pos.y+getWeightedRandom(0,6))
-	for pos in click_pos_after:
-		print('click_pos_after', pos)
-		between_click_time = getWeightedRandom(0,4)
-		time.sleep(abs(between_click_time))
-		print(pos.x, between_click_time)
-		pyautogui.click(pos.x+getWeightedRandom(0,6), pos.y+getWeightedRandom(0,6))
-	current_sequence_number =+ 1
-	if current_sequence_number == 3:
-		current_sequence_number = 0
+		for idx, pos in enumerate(click_pos_mid[current_sequence_number]): #this should be able to iterate through list items and have their index
+			between_click_time = getWeightedRandom(0,4)
+			time.sleep(abs(between_click_time))
+			if current_sequence_number > 0:
+				if idx == 0:
+					pyautogui.moveTo(pos.x+getWeightedRandom(0,4), pos.y+getWeightedRandom(0,4))
+				elif idx == 1:
+					pyautogui.dragTo(pos.x+getWeightedRandom(0,4), pos.y+getWeightedRandom(0,4), button='left')
+				elif current_sequence_number == 2 and idx == 2:
+					pyautogui.moveTo(pos.x+getWeightedRandom(0,4), pos.y+getWeightedRandom(0,4))
+				elif current_sequence_number == 2 and idx == 3:
+					pyautogui.dragTo(pos.x+getWeightedRandom(0,4), pos.y+getWeightedRandom(0,4), button='left')				
+				else:
+					print(pos.x, between_click_time)
+					pyautogui.click(pos.x+getWeightedRandom(0,6), pos.y+getWeightedRandom(0,6))
+		for pos in click_pos_after:
+			print('click_pos_after', pos)
+			between_click_time = getWeightedRandom(0,4)
+			time.sleep(abs(between_click_time))
+			print(pos.x, between_click_time)
+			pyautogui.click(pos.x+getWeightedRandom(0,6), pos.y+getWeightedRandom(0,6))
+		current_sequence_number =+ 1
+		if current_sequence_number == 3:
+			current_sequence_number = 0
 
 def show(key):
 	global click_pos_before
 	global click_pos_mid
 	global click_pos_after
-	# by pressing 'delete' button 
-	# you can terminate the loop 
 	if key == Key.delete: 
 		return False	
 	if hasattr(key,'char'):
@@ -125,7 +113,7 @@ def show(key):
 		if key.char == ('s'):
 			click_pos_after.append(pyautogui.position())
 		if key.char == ('d'):
-			# inProgrammingMode = False
+			#inProgrammingMode = False
 			sequence_loop()
 		if key.char == ('w'):
 			print('w pressed')
