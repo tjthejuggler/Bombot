@@ -1,6 +1,21 @@
 #currently buggy, clean prints and make them very specific and debug
 #we need a way to cancel, maybe unhoiok the listener when we are in the sequence loop
 
+
+# options
+# continue trying to hook up to the newest block
+# look for a transaction to a specific address and do something like this
+#       Just switch the bitcoin address in the url below to your bitcoin address, and import the json into a webapp. https://blockchain.info/address/$bitcoin_address?format=json
+# look into verifying signed messages (as first step verifying that a particular address has a specific nft)
+
+#when get signed message, get that address
+#       
+#be able to a qr on phone that proves ownership of address
+#       read the qr code on computer
+#       check the address of the signed message
+#       look for transactions in that address
+#       look for all UTXOs in that address and see if any are our "colored coin"
+
 import keyboard
 import pyautogui
 import time
