@@ -1,5 +1,9 @@
 #currently buggy, clean prints and make them very specific and debug
-#we need a way to cancel, maybe unhoiok the listener when we are in the sequence loop
+#we need a way to cancel, maybe unhook the listener when we are in the sequence loop
+
+
+
+
 
 import keyboard
 import pyautogui
