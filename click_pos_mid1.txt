@@ -1,0 +1,7 @@
+Point(x=628, y=671)
+Point(x=631, y=308)
+Point(x=874, y=375)
+Point(x=864, y=450)
+Point(x=867, y=521)
+Point(x=867, y=594)
+Point(x=872, y=667)
