@@ -114,7 +114,13 @@ def read_from_file():
 	print("read to file2",click_pos_before)
 	return click_pos_before_loaded, click_pos_mid_load0, click_pos_mid_load1, click_pos_mid_load2, click_pos_after_loaded
 
-base_session_minutes = 500
+#make the motions that are 
+#move & drag
+# click_pos_mid_drag
+# click_pos_mid_clicks
+#click 1,2,3,4,5 position
+
+base_session_minutes = 8
 inProgrammingMode = True
 current_sequence_number = 0
 
@@ -128,8 +134,8 @@ def sequence_loop():
 		print('click_pos_mid', click_pos_mid)
 		this_session_minutes = base_session_minutes + getWeightedRandom(0,1)
 		print('this_session_minutes', this_session_minutes, click_pos_before)
-		if current_sequence_number == 0:
-			current_sequence_number = 1
+		# if current_sequence_number == 0:
+		# 	current_sequence_number = 1
 		for i in range(int(this_session_minutes),0,-1): #this is the terminal countdown
 			sys.stdout.write(str(i)+' ')
 			sys.stdout.flush()
@@ -146,50 +152,76 @@ def sequence_loop():
 			print('click_pos_mid[current_sequence_number]', click_pos_mid[current_sequence_number])
 			print('pos, idx', pos, idx)
 			print("2current_sequence_number: ", current_sequence_number)
-			if current_sequence_number > 0:
+
+			should_do = "click"
+			if current_sequence_number*2 > idx:
+				if (idx % 2) == 0 or idx == 0:
+				   should_do = "move"
+				else:
+				   should_do = "drag"
+
+
+			if should_do == "click":
 				between_click_time = getWeightedRandom(2,4)
 				time.sleep(abs(between_click_time))
-				if idx == 0:
-					pyautogui.moveTo(pos.x+getWeightedRandom(0,2), pos.y+getWeightedRandom(0,2))
-					time.sleep(.5)
-					pyautogui.mouseDown(button='left')
-					print('0move to ', pyautogui.position())
-				elif idx == 1:
-					pyautogui.moveTo(pos.x+getWeightedRandom(0,2), pos.y+getWeightedRandom(0,2), duration=getWeightedRandom(2,5))
-					time.sleep(.5)
-					pyautogui.mouseUp(button='left')
-					print("1drag to ", pyautogui.position())
-				elif current_sequence_number == 2 and idx == 2:
-					pyautogui.moveTo(pos.x+getWeightedRandom(0,2), pos.y+getWeightedRandom(0,2))
-					print('2move to ', pyautogui.position())
-					time.sleep(.5)
-					pyautogui.mouseDown(button='left')
-				elif current_sequence_number == 2 and idx == 3:
-					print("3drag to ", pyautogui.position())
-					pyautogui.moveTo(pos.x+getWeightedRandom(0,2), pos.y+getWeightedRandom(0,2), duration=getWeightedRandom(2,5))	
-					time.sleep(.5)
-					pyautogui.mouseUp(button='left')			
-				elif current_sequence_number == 2 and idx == 4:
-					pyautogui.moveTo(pos.x+getWeightedRandom(0,2), pos.y+getWeightedRandom(0,2))
-					print('2move to ', pyautogui.position())
-					time.sleep(.5)
-					pyautogui.mouseDown(button='left')
-				elif current_sequence_number == 2 and idx == 5:
-					print("3drag to ", pyautogui.position())
-					pyautogui.moveTo(pos.x+getWeightedRandom(0,2), pos.y+getWeightedRandom(0,2), duration=getWeightedRandom(2,5))	
-					time.sleep(.5)
-					pyautogui.mouseUp(button='left')	
-				else:
-					print(pos.x, between_click_time)
-					pyautogui.click(pos.x+getWeightedRandom(1,4), pos.y+getWeightedRandom(1,4))
-					time.sleep(.2)
-					pyautogui.click(pos.x+getWeightedRandom(1,4), pos.y+getWeightedRandom(1,4))
-			else:
-				between_click_time = getWeightedRandom(1,3)
-				time.sleep(abs(between_click_time))
+				print(pos.x, between_click_time)
 				pyautogui.click(pos.x+getWeightedRandom(1,4), pos.y+getWeightedRandom(1,4))
 				time.sleep(.2)
 				pyautogui.click(pos.x+getWeightedRandom(1,4), pos.y+getWeightedRandom(1,4))
+
+			if should_do == "move":
+				pyautogui.moveTo(pos.x+getWeightedRandom(0,2), pos.y+getWeightedRandom(0,2))
+				print('2move to ', pyautogui.position())
+				time.sleep(.5)
+				pyautogui.mouseDown(button='left')				
+
+			if should_do == "drag":
+				print("3drag to ", pyautogui.position())
+				pyautogui.moveTo(pos.x+getWeightedRandom(0,2), pos.y+getWeightedRandom(0,2), duration=getWeightedRandom(2,5))	
+				time.sleep(.5)
+				pyautogui.mouseUp(button='left')
+
+			# 	if idx == 0:
+			# 		pyautogui.moveTo(pos.x+getWeightedRandom(0,2), pos.y+getWeightedRandom(0,2))
+			# 		time.sleep(.5)
+			# 		pyautogui.mouseDown(button='left')
+			# 		print('0move to ', pyautogui.position())
+			# 	elif idx == 1:
+			# 		pyautogui.moveTo(pos.x+getWeightedRandom(0,2), pos.y+getWeightedRandom(0,2), duration=getWeightedRandom(2,5))
+			# 		time.sleep(.5)
+			# 		pyautogui.mouseUp(button='left')
+			# 		print("1drag to ", pyautogui.position())
+			# 	elif current_sequence_number == 2 and idx == 2:
+			# 		pyautogui.moveTo(pos.x+getWeightedRandom(0,2), pos.y+getWeightedRandom(0,2))
+			# 		print('2move to ', pyautogui.position())
+			# 		time.sleep(.5)
+			# 		pyautogui.mouseDown(button='left')
+			# 	elif current_sequence_number == 2 and idx == 3:
+			# 		print("3drag to ", pyautogui.position())
+			# 		pyautogui.moveTo(pos.x+getWeightedRandom(0,2), pos.y+getWeightedRandom(0,2), duration=getWeightedRandom(2,5))	
+			# 		time.sleep(.5)
+			# 		pyautogui.mouseUp(button='left')			
+			# 	elif current_sequence_number == 2 and idx == 4:
+			# 		pyautogui.moveTo(pos.x+getWeightedRandom(0,2), pos.y+getWeightedRandom(0,2))
+			# 		print('2move to ', pyautogui.position())
+			# 		time.sleep(.5)
+			# 		pyautogui.mouseDown(button='left')
+			# 	elif current_sequence_number == 2 and idx == 5:
+			# 		print("3drag to ", pyautogui.position())
+			# 		pyautogui.moveTo(pos.x+getWeightedRandom(0,2), pos.y+getWeightedRandom(0,2), duration=getWeightedRandom(2,5))	
+			# 		time.sleep(.5)
+			# 		pyautogui.mouseUp(button='left')	
+			# 	else:
+			# 		print(pos.x, between_click_time)
+			# 		pyautogui.click(pos.x+getWeightedRandom(1,4), pos.y+getWeightedRandom(1,4))
+			# 		time.sleep(.2)
+			# 		pyautogui.click(pos.x+getWeightedRandom(1,4), pos.y+getWeightedRandom(1,4))
+			# else:
+			# 	between_click_time = getWeightedRandom(1,3)
+			# 	time.sleep(abs(between_click_time))
+			# 	pyautogui.click(pos.x+getWeightedRandom(1,4), pos.y+getWeightedRandom(1,4))
+			# 	time.sleep(.2)
+			# 	pyautogui.click(pos.x+getWeightedRandom(1,4), pos.y+getWeightedRandom(1,4))
 		for pos in click_pos_after:
 			print('click_pos_after', pos)
 			between_click_time = getWeightedRandom(1,3)
