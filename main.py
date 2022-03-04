@@ -113,14 +113,20 @@ def read_from_file():
 			print(click_pos_after_loaded)			
 	print("read to file2",click_pos_before)
 	return click_pos_before_loaded, click_pos_mid_load0, click_pos_mid_load1, click_pos_mid_load2, click_pos_after_loaded
+#make work overnight:::
+#occasionally click back button and then return to game
 
+#make it use bottom more
+#more set of fewer heros
+
+#better consolidated:::
 #make the motions that are 
 #move & drag
 # click_pos_mid_drag
 # click_pos_mid_clicks
 #click 1,2,3,4,5 position
 
-base_session_minutes = 8
+base_session_minutes = 60
 inProgrammingMode = True
 current_sequence_number = 0
 
@@ -154,7 +160,7 @@ def sequence_loop():
 			print("2current_sequence_number: ", current_sequence_number)
 
 			should_do = "click"
-			if current_sequence_number*2 > idx:
+			if current_sequence_number*4 > idx:
 				if (idx % 2) == 0 or idx == 0:
 				   should_do = "move"
 				else:
@@ -165,9 +171,10 @@ def sequence_loop():
 				between_click_time = getWeightedRandom(2,4)
 				time.sleep(abs(between_click_time))
 				print(pos.x, between_click_time)
-				pyautogui.click(pos.x+getWeightedRandom(1,4), pos.y+getWeightedRandom(1,4))
 				time.sleep(.2)
 				pyautogui.click(pos.x+getWeightedRandom(1,4), pos.y+getWeightedRandom(1,4))
+				time.sleep(.2)
+				#pyautogui.click(pos.x+getWeightedRandom(1,4), pos.y+getWeightedRandom(1,4))
 
 			if should_do == "move":
 				pyautogui.moveTo(pos.x+getWeightedRandom(0,2), pos.y+getWeightedRandom(0,2))
